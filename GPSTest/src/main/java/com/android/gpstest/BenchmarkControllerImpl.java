@@ -36,6 +36,9 @@ import com.google.android.material.card.*;
 import com.google.android.material.textfield.*;
 import com.sothree.slidinguppanel.*;
 
+import java.text.*;
+import java.util.*;
+
 import static android.text.TextUtils.*;
 import static android.view.View.*;
 
@@ -151,16 +154,22 @@ public class BenchmarkControllerImpl implements BenchmarkController {
             if (!mBenchmarkCardCollapsed) {
                 // TODO - if lat and long aren't filled, show error
 
+                //PP java.lang.NumberFormatException: For input string: "42,7138500"
+                NumberFormat localeFormat = DecimalFormat.getInstance(Locale.getDefault());
+
                 // Save Ground Truth
                 mGroundTruthLocation = new Location("ground_truth");
-                if (!isEmpty(mLatText.getEditText().getText().toString()) && !isEmpty(mLongText.getEditText().getText().toString())) {
-                    mGroundTruthLocation.setLatitude(Double.valueOf(mLatText.getEditText().getText().toString()));
-                    mGroundTruthLocation.setLongitude(Double.valueOf(mLongText.getEditText().getText().toString()));
-                }
-                if (!isEmpty(mAltText.getEditText().getText().toString())) {
-                    mGroundTruthLocation.setAltitude(Double.valueOf(mAltText.getEditText().getText().toString()));
-                }
-
+try {
+    if (!isEmpty(mLatText.getEditText().getText().toString()) && !isEmpty(mLongText.getEditText().getText().toString())) {
+        mGroundTruthLocation.setLatitude(localeFormat.parse(/*Double.valueOf(*/mLatText.getEditText().getText().toString()).doubleValue());
+        mGroundTruthLocation.setLongitude(localeFormat.parse(/*Double.valueOf(*/mLongText.getEditText().getText().toString()).doubleValue());
+    }
+    if (!isEmpty(mAltText.getEditText().getText().toString())) {
+        mGroundTruthLocation.setAltitude(localeFormat.parse(/*Double.valueOf(*/mAltText.getEditText().getText().toString()).doubleValue());
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
                 // Collapse card - we have to set height on card manually because card doesn't auto-collapse right when views are within card container
                 mMotionLayout.transitionToEnd();
                 lp.height = (int) Application.get().getResources().getDimension(R.dimen.ground_truth_cardview_height_collapsed);
