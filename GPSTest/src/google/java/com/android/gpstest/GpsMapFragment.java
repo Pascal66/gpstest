@@ -17,43 +17,24 @@
 
 package com.android.gpstest;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.*;
+import android.content.*;
+import android.graphics.*;
+import android.location.*;
+import android.net.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
 
-import com.android.gpstest.util.MapUtils;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.SphericalUtil;
+import androidx.annotation.*;
 
-import java.util.Arrays;
+import com.android.gpstest.util.*;
+import com.google.android.gms.common.*;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+import com.google.maps.android.*;
 
-import androidx.annotation.RequiresApi;
+import java.util.*;
 
 public class GpsMapFragment extends SupportMapFragment
         implements GpsTestListener, View.OnClickListener, LocationSource,
@@ -129,26 +110,14 @@ public class GpsMapFragment extends SupportMapFragment
             if (!sp.getBoolean(PREFERENCE_SHOWED_DIALOG, false)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getString(R.string.please_install_google_maps));
-                builder.setPositiveButton(getString(R.string.install),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                sp.edit().putBoolean(PREFERENCE_SHOWED_DIALOG, true).commit();
-                                Intent intent = new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(
-                                                "market://details?id=com.google.android.apps.maps"));
-                                startActivity(intent);
-                            }
-                        }
-                );
-                builder.setNegativeButton(getString(R.string.no_thanks),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                sp.edit().putBoolean(PREFERENCE_SHOWED_DIALOG, true).commit();
-                            }
-                        }
-                );
+                builder.setPositiveButton(getString(R.string.install), (dialog, which) -> {
+                    sp.edit().putBoolean(PREFERENCE_SHOWED_DIALOG, true).apply();
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(
+                                    "market://details?id=com.google.android.apps.maps"));
+                    startActivity(intent);
+                });
+                builder.setNegativeButton(getString(R.string.no_thanks), (dialog, which) -> sp.edit().putBoolean(PREFERENCE_SHOWED_DIALOG, true).apply());
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }

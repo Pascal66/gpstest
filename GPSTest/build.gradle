@@ -1,5 +1,3 @@
-import groovy.swing.SwingBuilder
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
@@ -9,7 +7,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 45
         versionName "3.2.10"
 
@@ -105,7 +103,7 @@ android {
 /**
  * Ask for keystore/key passwords on the command line or popup UI when running release builds
  */
-task askForPasswords << {
+task askForPasswords  {
     def console = System.console()
     def storePw
     def keyPw
@@ -117,23 +115,23 @@ task askForPasswords << {
         keyPw = new String(console.readPassword("Key password: "))
     } else {
         // Gradle is running as a daemon - prompt user to enter passwords via popup UI (#87)
-        new SwingBuilder().edt {
-            dialog(modal: true, title: 'Enter credentials', alwaysOnTop: true, resizable: true,
-                    locationRelativeTo: null, pack: true, show: true
-            ) {
-                vbox {
-                    label(text: "Keystore passphrase:")
-                    textField id: "storeText", input = passwordField()
-                    label(text: "Key passphrase:")
-                    textField id: "keyText", input = passwordField()
-                    button(defaultButton: true, text: 'OK', actionPerformed: {
-                        storePw = storeText.text;
-                        keyPw = keyText.text;
-                        dispose();
-                    })
-                }
-            }
-        }
+//        new SwingBuilder().edt {
+//            dialog(modal: true, title: 'Enter credentials', alwaysOnTop: true, resizable: true,
+//                    locationRelativeTo: null, pack: true, show: true
+//            ) {
+//                vbox {
+//                    label(text: "Keystore passphrase:")
+//                    textField id: "storeText", input = passwordField()
+//                    label(text: "Key passphrase:")
+//                    textField id: "keyText", input = passwordField()
+//                    button(defaultButton: true, text: 'OK', actionPerformed: {
+//                        storePw = storeText.text;
+//                        keyPw = keyText.text;
+//                        dispose();
+//                    })
+//                }
+//            }
+//        }
     }
 
     android.signingConfigs.release.storePassword = storePw
@@ -147,11 +145,11 @@ tasks.whenTaskAdded { theTask ->
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
 
     // Sliding drawer in map view
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
@@ -164,11 +162,11 @@ dependencies {
     // Calculating offset for camera target in map view (Google flavor only)
     googleImplementation 'com.google.maps.android:android-maps-utils:0.5'
     // OSM Droid (fdroid flavor only)
-    osmdroidImplementation 'org.osmdroid:osmdroid-android:6.0.2'
+    osmdroidImplementation 'org.osmdroid:osmdroid-android:6.0.3'
 
     // Unit tests
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 }

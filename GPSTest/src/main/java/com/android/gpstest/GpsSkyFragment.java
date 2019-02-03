@@ -17,34 +17,22 @@
 
 package com.android.gpstest;
 
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.graphics.drawable.*;
+import android.location.*;
+import android.os.*;
+import android.view.*;
+import android.view.animation.*;
+import android.widget.*;
 
-import com.android.gpstest.util.MathUtils;
-import com.android.gpstest.util.UIUtils;
-import com.android.gpstest.view.GpsSkyView;
+import androidx.annotation.*;
+import androidx.core.content.*;
+import androidx.fragment.app.*;
+import androidx.interpolator.view.animation.*;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.android.gpstest.util.*;
+import com.android.gpstest.view.*;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import java.util.*;
 
 public class GpsSkyFragment extends Fragment implements GpsTestListener {
 
@@ -348,7 +336,7 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
 
         // Set avg SNR or C/N0 of satellites in view of device
         if (MathUtils.isValidFloat(mSkyView.getSnrCn0InViewAvg())) {
-            mSnrCn0InViewAvgText.setText(String.format("%.1f", mSkyView.getSnrCn0InViewAvg()));
+            mSnrCn0InViewAvgText.setText(String.format(Locale.getDefault(), "%.1f", mSkyView.getSnrCn0InViewAvg()));
 
             // Set color of TextView
             int color = mSkyView.getSatelliteColor(mSkyView.getSnrCn0InViewAvg());
@@ -413,7 +401,7 @@ public class GpsSkyFragment extends Fragment implements GpsTestListener {
 
         // Set avg SNR or C/N0 of satellites used in fix
         if (MathUtils.isValidFloat(mSkyView.getSnrCn0UsedAvg())) {
-            mSnrCn0UsedAvgText.setText(String.format("%.1f", mSkyView.getSnrCn0UsedAvg()));
+            mSnrCn0UsedAvgText.setText(String.format(Locale.getDefault(), "%.1f", mSkyView.getSnrCn0UsedAvg()));
             // Set color of TextView
             int color = mSkyView.getSatelliteColor(mSkyView.getSnrCn0UsedAvg());
             LayerDrawable background = (LayerDrawable) ContextCompat.getDrawable(Application.get(), R.drawable.cn0_round_corner_background_used);

@@ -136,7 +136,7 @@ public class NavigationDrawerFragment extends Fragment {
     };
 
     // list of navdrawer items that were actually added to the navdrawer, in order
-    private ArrayList<Integer> mNavDrawerItems = new ArrayList<Integer>();
+    private ArrayList<Integer> mNavDrawerItems = new ArrayList<>();
 
     // views that correspond to each navdrawer item, null if not yet created
     private View[] mNavDrawerItemViews = null;
@@ -263,12 +263,7 @@ public class NavigationDrawerFragment extends Fragment {
         };
 
         // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+        mDrawerLayout.post(() -> mDrawerToggle.syncState());
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
@@ -482,12 +477,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         formatNavDrawerItem(view, itemId, selected);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectItem(itemId);
-            }
-        });
+        view.setOnClickListener(v -> selectItem(itemId));
 
         return view;
     }

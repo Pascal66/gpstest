@@ -17,57 +17,31 @@
 
 package com.android.gpstest;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssStatus;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
+import android.annotation.*;
+import android.content.*;
+import android.content.res.*;
+import android.graphics.*;
+import android.graphics.drawable.*;
+import android.location.*;
+import android.os.*;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
-import com.android.gpstest.model.ConstellationType;
-import com.android.gpstest.model.DilutionOfPrecision;
-import com.android.gpstest.model.GnssType;
-import com.android.gpstest.model.SatelliteStatus;
-import com.android.gpstest.util.GpsTestUtil;
-import com.android.gpstest.util.MathUtils;
-import com.android.gpstest.util.PreferenceUtils;
-import com.android.gpstest.util.SortUtil;
-import com.android.gpstest.util.UIUtils;
+import androidx.annotation.*;
+import androidx.appcompat.app.*;
+import androidx.fragment.app.*;
+import androidx.recyclerview.widget.*;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.android.gpstest.model.*;
+import com.android.gpstest.util.*;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import java.text.*;
+import java.util.*;
 
-import static android.util.TypedValue.COMPLEX_UNIT_DIP;
-import static android.util.TypedValue.COMPLEX_UNIT_PX;
-import static com.android.gpstest.model.ConstellationType.GNSS;
-import static com.android.gpstest.model.ConstellationType.SBAS;
-import static com.android.gpstest.model.SatelliteStatus.NO_DATA;
+import static android.util.TypedValue.*;
+import static com.android.gpstest.model.ConstellationType.*;
+import static com.android.gpstest.model.SatelliteStatus.*;
 
 public class GpsStatusFragment extends Fragment implements GpsTestListener {
 
@@ -884,7 +858,7 @@ public class GpsStatusFragment extends Fragment implements GpsTestListener {
                             // Shrink the size so we can show raw number
                             v.getCarrierFrequency().setTextSize(COMPLEX_UNIT_DIP, 10);
                             // Show raw number for carrier frequency
-                            v.getCarrierFrequency().setText(String.format("%.3f", carrierMhz));
+                            v.getCarrierFrequency().setText(String.format(Locale.getDefault(), "%.3f", carrierMhz));
                         }
                     } else {
                         v.getCarrierFrequency().setText("");
@@ -893,7 +867,7 @@ public class GpsStatusFragment extends Fragment implements GpsTestListener {
                     v.getCarrierFrequency().setVisibility(View.GONE);
                 }
                 if (sats.get(dataRow).getCn0DbHz() != NO_DATA) {
-                    v.getSignal().setText(String.format("%.1f", sats.get(dataRow).getCn0DbHz()));
+                    v.getSignal().setText(String.format(Locale.getDefault(), "%.1f", sats.get(dataRow).getCn0DbHz()));
                 } else {
                     v.getSignal().setText("");
                 }

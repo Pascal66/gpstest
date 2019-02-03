@@ -180,16 +180,11 @@ public class GpsSkyView extends View implements GpsTestListener {
         setFocusable(true);
 
         // Get the proper height and width of view before drawing
-        getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        mHeight = getHeight();
-                        mWidth = getWidth();
-                        return true;
-                    }
-                }
-        );
+        getViewTreeObserver().addOnPreDrawListener(() -> {
+            mHeight = getHeight();
+            mWidth = getWidth();
+            return true;
+        });
     }
 
     public void setStarted() {

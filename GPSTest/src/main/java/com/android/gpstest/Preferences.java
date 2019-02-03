@@ -70,26 +70,23 @@ public class Preferences extends PreferenceActivity implements
         prefAnalyzeGpsAccuracy = this
                 .findPreference(getString(R.string.pref_key_analyze_gps_accuracy));
 
-        prefAnalyzeGpsAccuracy.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference pref) {
-                // Check to see if GPS Benchmark is already installed
-                Intent intent = getPackageManager()
-                        .getLaunchIntentForPackage(getString(R.string.gps_benchmark_package_name));
-                if (intent != null) {
-                    // Start GPS Benchmark
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else {
-                    // Go to Google Play
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    // Use http:// scheme here instead of market:// so it doesn't crash on devices without Google Play
-                    intent.setData(Uri.parse(getString(R.string.gps_benchmark_url)));
-                    startActivity(intent);
-                }
-                return false;
+        prefAnalyzeGpsAccuracy.setOnPreferenceClickListener(pref -> {
+            // Check to see if GPS Benchmark is already installed
+            Intent intent = getPackageManager()
+                    .getLaunchIntentForPackage(getString(R.string.gps_benchmark_package_name));
+            if (intent != null) {
+                // Start GPS Benchmark
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                // Go to Google Play
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // Use http:// scheme here instead of market:// so it doesn't crash on devices without Google Play
+                intent.setData(Uri.parse(getString(R.string.gps_benchmark_url)));
+                startActivity(intent);
             }
+            return false;
         });
 
         txtMinTime = (EditTextPreference) this
@@ -98,19 +95,16 @@ public class Preferences extends PreferenceActivity implements
                 .setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         // Verify minTime entry
-        txtMinTime.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!verifyFloat(newValue)) {
-                    // Tell user that entry must be valid decimal
-                    Toast.makeText(
-                            Preferences.this,
-                            getString(R.string.pref_gps_min_time_invalid_entry),
-                            Toast.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    return true;
-                }
+        txtMinTime.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!verifyFloat(newValue)) {
+                // Tell user that entry must be valid decimal
+                Toast.makeText(
+                        Preferences.this,
+                        getString(R.string.pref_gps_min_time_invalid_entry),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return true;
             }
         });
 
@@ -120,19 +114,16 @@ public class Preferences extends PreferenceActivity implements
                 .setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         // Verify minDistance entry
-        txtMinDistance.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!verifyFloat(newValue)) {
-                    // Tell user that entry must be valid decimal
-                    Toast.makeText(
-                            Preferences.this,
-                            getString(R.string.pref_gps_min_distance_invalid_entry),
-                            Toast.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    return true;
-                }
+        txtMinDistance.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!verifyFloat(newValue)) {
+                // Tell user that entry must be valid decimal
+                Toast.makeText(
+                        Preferences.this,
+                        getString(R.string.pref_gps_min_distance_invalid_entry),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return true;
             }
         });
 
@@ -140,13 +131,10 @@ public class Preferences extends PreferenceActivity implements
         chkDarkTheme = (CheckBoxPreference) this
                 .findPreference(getString(R.string.pref_key_dark_theme));
 
-        chkDarkTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Destroy and recreate Activity
-                recreate();
-                return true;
-            }
+        chkDarkTheme.setOnPreferenceChangeListener((preference, newValue) -> {
+            // Destroy and recreate Activity
+            recreate();
+            return true;
         });
 
         preferredDistanceUnits = (ListPreference) findPreference(
@@ -219,12 +207,7 @@ public class Preferences extends PreferenceActivity implements
                 R.layout.settings_activity, new LinearLayout(this), false);
 
         mActionBar = (Toolbar) contentView.findViewById(R.id.action_bar);
-        mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        mActionBar.setNavigationOnClickListener(v -> finish());
 
         ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
         LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);

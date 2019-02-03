@@ -15,42 +15,29 @@
  */
 package com.android.gpstest;
 
-import android.animation.LayoutTransition;
-import android.graphics.Color;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.animation.*;
+import android.graphics.*;
+import android.location.*;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
 
-import com.android.gpstest.chart.DistanceValueFormatter;
-import com.android.gpstest.model.AvgError;
-import com.android.gpstest.model.MeasuredError;
-import com.android.gpstest.util.BenchmarkUtils;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.textfield.TextInputLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import androidx.constraintlayout.motion.widget.*;
 
-import androidx.constraintlayout.motion.widget.MotionLayout;
+import com.android.gpstest.chart.*;
+import com.android.gpstest.model.*;
+import com.android.gpstest.util.*;
+import com.github.mikephil.charting.charts.*;
+import com.github.mikephil.charting.components.*;
+import com.github.mikephil.charting.data.*;
+import com.github.mikephil.charting.interfaces.datasets.*;
+import com.github.mikephil.charting.utils.*;
+import com.google.android.material.card.*;
+import com.google.android.material.textfield.*;
+import com.sothree.slidinguppanel.*;
 
-import static android.text.TextUtils.isEmpty;
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
+import static android.text.TextUtils.*;
+import static android.view.View.*;
 
 /**
  * This class encapsulates logic used for the benchmarking feature that compares a user-entered
@@ -124,9 +111,6 @@ public class BenchmarkControllerImpl implements BenchmarkController {
         mLongText = v.findViewById(R.id.ground_truth_long);
         mAltText = v.findViewById(R.id.ground_truth_alt);
         mMotionLayout.setTransitionListener(new MotionLayout.TransitionListener() {
-            @Override
-            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
-            }
 
             @Override
             public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {
@@ -148,6 +132,15 @@ public class BenchmarkControllerImpl implements BenchmarkController {
                     mLongText.setFocusable(false);
                     mAltText.setFocusable(false);
                 }
+            }
+            @Override
+            public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
+            }
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+            }
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
             }
         });
 

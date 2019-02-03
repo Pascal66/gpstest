@@ -17,84 +17,39 @@
 
 package com.android.gpstest;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
+import android.*;
+import android.annotation.*;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.hardware.GeomagneticField;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.GnssMeasurement;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.location.OnNmeaMessageListener;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Surface;
-import android.view.View;
-import android.view.Window;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.*;
+import android.content.*;
+import android.content.pm.*;
+import android.graphics.drawable.*;
+import android.hardware.*;
+import android.location.*;
+import android.net.*;
+import android.os.*;
+import android.preference.*;
+import android.provider.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
 
-import com.android.gpstest.util.GpsTestUtil;
-import com.android.gpstest.util.LocationUtils;
-import com.android.gpstest.util.MathUtils;
-import com.android.gpstest.util.PermissionUtils;
-import com.android.gpstest.util.PreferenceUtils;
-import com.android.gpstest.util.UIUtils;
-
-import java.util.ArrayList;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.*;
+import androidx.appcompat.app.*;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.app.*;
+import androidx.core.graphics.drawable.*;
+import androidx.core.view.*;
+import androidx.drawerlayout.widget.*;
 import androidx.fragment.app.FragmentManager;
 
-import static android.content.Intent.createChooser;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_CLEAR_AIDING_DATA;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_HELP;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_INJECT_TIME_DATA;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_INJECT_XTRA_DATA;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_MAP;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_OPEN_SOURCE;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_SEND_FEEDBACK;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_SETTINGS;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_SKY;
-import static com.android.gpstest.NavigationDrawerFragment.NAVDRAWER_ITEM_STATUS;
-import static com.android.gpstest.util.GpsTestUtil.writeGnssMeasurementToLog;
-import static com.android.gpstest.util.GpsTestUtil.writeNavMessageToLog;
-import static com.android.gpstest.util.GpsTestUtil.writeNmeaToLog;
+import com.android.gpstest.util.*;
+
+import java.util.*;
+
+import static android.content.Intent.*;
+import static com.android.gpstest.NavigationDrawerFragment.*;
+import static com.android.gpstest.util.GpsTestUtil.*;
 
 public class GpsTestActivity extends AppCompatActivity
         implements LocationListener, SensorEventListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -198,7 +153,7 @@ public class GpsTestActivity extends AppCompatActivity
     private GnssNavigationMessage.Callback mGnssNavMessageListener;
 
     // Listeners for Fragments
-    private ArrayList<GpsTestListener> mGpsTestListeners = new ArrayList<GpsTestListener>();
+    private ArrayList<GpsTestListener> mGpsTestListeners = new ArrayList<>();
 
     private Location mLastLocation;
 
@@ -685,11 +640,7 @@ public class GpsTestActivity extends AppCompatActivity
             Handler h = new Handler();
             // Restart the GPS, if it was previously started, with a slight delay,
             // to refresh the assistance data
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    gpsStart();
-                }
-            }, 500);
+            h.postDelayed(() -> gpsStart(), 500);
         }
     }
 
@@ -872,12 +823,7 @@ public class GpsTestActivity extends AppCompatActivity
                 }
                 Log.d(TAG, "GnssMeasurementsEvent.Callback.onStatusChanged() - " + statusMessage);
                 if (UIUtils.canManageDialog(GpsTestActivity.this)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(GpsTestActivity.this, statusMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    runOnUiThread(() -> Toast.makeText(GpsTestActivity.this, statusMessage, Toast.LENGTH_SHORT).show());
                 }
             }
         };
@@ -885,27 +831,24 @@ public class GpsTestActivity extends AppCompatActivity
     }
 
     private void addLegacyStatusListener() {
-        mLegacyStatusListener = new GpsStatus.Listener() {
-            @Override
-            public void onGpsStatusChanged(int event) {
-                mLegacyStatus = mLocationManager.getGpsStatus(mLegacyStatus);
+        mLegacyStatusListener = event -> {
+            mLegacyStatus = mLocationManager.getGpsStatus(mLegacyStatus);
 
-                switch (event) {
-                    case GpsStatus.GPS_EVENT_STARTED:
-                        break;
-                    case GpsStatus.GPS_EVENT_STOPPED:
-                        break;
-                    case GpsStatus.GPS_EVENT_FIRST_FIX:
-                        break;
-                    case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                        // Stop progress bar after the first status information is obtained
-                        setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
-                        break;
-                }
+            switch (event) {
+                case GpsStatus.GPS_EVENT_STARTED:
+                    break;
+                case GpsStatus.GPS_EVENT_STOPPED:
+                    break;
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                    break;
+                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                    // Stop progress bar after the first status information is obtained
+                    setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    break;
+            }
 
-                for (GpsTestListener listener : mGpsTestListeners) {
-                    listener.onGpsStatusChanged(event, mLegacyStatus);
-                }
+            for (GpsTestListener listener : mGpsTestListeners) {
+                listener.onGpsStatusChanged(event, mLegacyStatus);
             }
         };
         mLocationManager.addGpsStatusListener(mLegacyStatusListener);
@@ -953,18 +896,15 @@ public class GpsTestActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void addNmeaListenerAndroidN() {
         if (mOnNmeaMessageListener == null) {
-            mOnNmeaMessageListener = new OnNmeaMessageListener() {
-                @Override
-                public void onNmeaMessage(String message, long timestamp) {
-                    for (GpsTestListener listener : mGpsTestListeners) {
-                        listener.onNmeaMessage(message, timestamp);
-                    }
-                    if (mLogNmea) {
-                        writeNmeaToLog(message,
-                                mWriteNmeaTimestampToLog ? timestamp : Long.MIN_VALUE);
-                    }
-                    PreferenceUtils.saveInt(Application.get().getString(R.string.capability_key_nmea), PreferenceUtils.CAPABILITY_SUPPORTED);
+            mOnNmeaMessageListener = (message, timestamp) -> {
+                for (GpsTestListener listener : mGpsTestListeners) {
+                    listener.onNmeaMessage(message, timestamp);
                 }
+                if (mLogNmea) {
+                    writeNmeaToLog(message,
+                            mWriteNmeaTimestampToLog ? timestamp : Long.MIN_VALUE);
+                }
+                PreferenceUtils.saveInt(Application.get().getString(R.string.capability_key_nmea), PreferenceUtils.CAPABILITY_SUPPORTED);
             };
         }
         mLocationManager.addNmeaListener(mOnNmeaMessageListener);
@@ -972,17 +912,14 @@ public class GpsTestActivity extends AppCompatActivity
 
     private void addLegacyNmeaListener() {
         if (mLegacyNmeaListener == null) {
-            mLegacyNmeaListener = new GpsStatus.NmeaListener() {
-                @Override
-                public void onNmeaReceived(long timestamp, String nmea) {
-                    for (GpsTestListener listener : mGpsTestListeners) {
-                        listener.onNmeaMessage(nmea, timestamp);
-                    }
-                    if (mLogNmea) {
-                        writeNmeaToLog(nmea, mWriteNmeaTimestampToLog ? timestamp : Long.MIN_VALUE);
-                    }
-                    PreferenceUtils.saveInt(Application.get().getString(R.string.capability_key_nmea), PreferenceUtils.CAPABILITY_SUPPORTED);
+            mLegacyNmeaListener = (timestamp, nmea) -> {
+                for (GpsTestListener listener : mGpsTestListeners) {
+                    listener.onNmeaMessage(nmea, timestamp);
                 }
+                if (mLogNmea) {
+                    writeNmeaToLog(nmea, mWriteNmeaTimestampToLog ? timestamp : Long.MIN_VALUE);
+                }
+                PreferenceUtils.saveInt(Application.get().getString(R.string.capability_key_nmea), PreferenceUtils.CAPABILITY_SUPPORTED);
             };
         }
         mLocationManager.addNmeaListener(mLegacyNmeaListener);
@@ -1030,12 +967,7 @@ public class GpsTestActivity extends AppCompatActivity
                     }
                     Log.d(TAG, "GnssNavigationMessage.Callback.onStatusChanged() - " + statusMessage);
                     if (UIUtils.canManageDialog(GpsTestActivity.this)) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(GpsTestActivity.this, statusMessage, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        runOnUiThread(() -> Toast.makeText(GpsTestActivity.this, statusMessage, Toast.LENGTH_SHORT).show());
                     }
                 }
             };
@@ -1056,23 +988,13 @@ public class GpsTestActivity extends AppCompatActivity
     private void promptEnableGps() {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.enable_gps_message))
-                .setPositiveButton(getString(R.string.enable_gps_positive_button),
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(
-                                        Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivity(intent);
-                            }
-                        }
-                )
-                .setNegativeButton(getString(R.string.enable_gps_negative_button),
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }
-                )
+                .setPositiveButton(getString(R.string.enable_gps_positive_button), (dialog, which) -> {
+                    Intent intent = new Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton(getString(R.string.enable_gps_negative_button), (dialog, which) -> {
+                })
                 .show();
     }
 
@@ -1177,16 +1099,13 @@ public class GpsTestActivity extends AppCompatActivity
                 mSwitch.setChecked(mStarted);
 
                 // Set up listener for GPS on/off switch
-                mSwitch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Turn GPS on or off
-                        if (!mSwitch.isChecked() && mStarted) {
-                            gpsStop();
-                        } else {
-                            if (mSwitch.isChecked() && !mStarted) {
-                                gpsStart();
-                            }
+                mSwitch.setOnClickListener(v -> {
+                    // Turn GPS on or off
+                    if (!mSwitch.isChecked() && mStarted) {
+                        gpsStop();
+                    } else {
+                        if (mSwitch.isChecked() && !mStarted) {
+                            gpsStart();
                         }
                     }
                 });
@@ -1413,13 +1332,7 @@ public class GpsTestActivity extends AppCompatActivity
         builder.setTitle(R.string.main_help_whatsnew_title);
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setView(textView);
-        builder.setNeutralButton(R.string.main_help_close,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismissDialog(WHATSNEW_DIALOG);
-                    }
-                }
-        );
+        builder.setNeutralButton(R.string.main_help_close, (dialog, which) -> dismissDialog(WHATSNEW_DIALOG));
         return builder.create();
     }
 
@@ -1428,20 +1341,16 @@ public class GpsTestActivity extends AppCompatActivity
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.title_help);
         int options = R.array.main_help_options;
-        builder.setItems(options,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                showDialog(WHATSNEW_DIALOG);
-                                break;
-                            case 1:
-                                startActivity(new Intent(GpsTestActivity.getInstance(), HelpActivity.class));
-                                break;
-                        }
-                    }
-                }
-        );
+        builder.setItems(options, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    showDialog(WHATSNEW_DIALOG);
+                    break;
+                case 1:
+                    startActivity(new Intent(GpsTestActivity.getInstance(), HelpActivity.class));
+                    break;
+            }
+        });
         return builder.create();
     }
 
@@ -1450,12 +1359,9 @@ public class GpsTestActivity extends AppCompatActivity
         View view = getLayoutInflater().inflate(R.layout.clear_assist_warning, null);
         CheckBox neverShowDialog = view.findViewById(R.id.clear_assist_never_ask_again);
 
-        neverShowDialog.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                // Save the preference
-                PreferenceUtils.saveBoolean(getString(R.string.pref_key_never_show_clear_assist_warning), isChecked);
-            }
+        neverShowDialog.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            // Save the preference
+            PreferenceUtils.saveBoolean(getString(R.string.pref_key_never_show_clear_assist_warning), isChecked);
         });
 
         Drawable icon = getResources().getDrawable(R.drawable.ic_delete);
@@ -1466,22 +1372,10 @@ public class GpsTestActivity extends AppCompatActivity
                 .setIcon(icon)
                 .setCancelable(false)
                 .setView(view)
-                .setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteAidingData();
-                            }
-                        }
-                )
-                .setNegativeButton(R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // No-op
-                            }
-                        }
-                );
+                .setPositiveButton(R.string.yes, (dialog, which) -> deleteAidingData())
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                    // No-op
+                });
         return builder.create();
     }
 
@@ -1496,24 +1390,14 @@ public class GpsTestActivity extends AppCompatActivity
                 .setTitle(R.string.title_location_permission)
                 .setMessage(R.string.text_location_permission)
                 .setCancelable(false)
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Request permissions from the user
-                                ActivityCompat.requestPermissions(mActivity, REQUIRED_PERMISSIONS, LOCATION_PERMISSION_REQUEST);
-                            }
-                        }
-                )
-            .setNegativeButton(R.string.exit,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Exit app
-                        finish();
-                    }
-                }
-        );
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    // Request permissions from the user
+                    ActivityCompat.requestPermissions(mActivity, REQUIRED_PERMISSIONS, LOCATION_PERMISSION_REQUEST);
+                })
+            .setNegativeButton(R.string.exit, (dialog, which) -> {
+                // Exit app
+                finish();
+            });
         builder.create().show();
     }
 }
